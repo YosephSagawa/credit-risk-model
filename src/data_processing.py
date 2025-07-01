@@ -5,6 +5,8 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 from datetime import datetime
+import pickle
+import os
 
 def extract_temporal_features(df):
     df['TransactionStartTime'] = pd.to_datetime(df['TransactionStartTime'], utc=True).dt.tz_localize(None)
@@ -22,6 +24,8 @@ def create_aggregate_features(df):
     agg_features.columns = [
         'CustomerId', 'TotalAmount', 'AvgAmount', 'TransactionCount', 'StdAmount', 'UniqueTransactions'
     ]
+    # Handle NaN in StdAmount (e.g., for customers with a single transaction)
+    agg_features['StdAmount'] = agg_features['StdAmount'].fillna(0)
     return agg_features
 
 def preprocess_data(df, fit=True, preprocessor=None):
@@ -44,6 +48,9 @@ def preprocess_data(df, fit=True, preprocessor=None):
     # Create aggregate features
     agg_df = create_aggregate_features(df)
     df = df.merge(agg_df, on='CustomerId', how='left')
+    
+    # Preserve is_high_risk for output
+    is_high_risk = df['is_high_risk'].copy()
     
     # Define numerical and categorical columns
     numerical_cols = ['TotalAmount', 'AvgAmount', 'TransactionCount', 'StdAmount', 'TransactionHour']
@@ -85,7 +92,11 @@ def preprocess_data(df, fit=True, preprocessor=None):
     
     processed_data = pd.DataFrame(processed_data, columns=feature_names, index=df.index)
     
-    return processed_data, preprocessor, df
+    # Create processed_df with only processed features and is_high_risk
+    processed_df = processed_data.copy()
+    processed_df['is_high_risk'] = is_high_risk
+    
+    return processed_data, preprocessor, processed_df
 
 if __name__ == "__main__":
     # Load data with proxy variable
@@ -97,3 +108,10 @@ if __name__ == "__main__":
     # Save processed data
     pd.DataFrame(processed_data).to_csv('../data/processed/processed_data.csv', index=False)
     processed_df.to_csv('../data/processed/processed_data_with_features.csv', index=False)
+    
+    # Create models directory if it doesn't exist
+    os.makedirs('../models', exist_ok=True)
+    
+    # Save preprocessor
+    with open('../models/preprocessor.pkl', 'wb') as f:
+        pickle.dump(preprocessor, f)

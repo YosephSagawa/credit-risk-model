@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/KAIM/credit-risk-model/src/mlruns/0/784c7537724d4aebb8e066f3622dc5fb/artifacts
+end_time: 1751376194527
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 784c7537724d4aebb8e066f3622dc5fb
+run_name: logistic_regression
+run_uuid: 784c7537724d4aebb8e066f3622dc5fb
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1751376192847
+status: 4
+tags: []
+user_id: Hp

@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/KAIM/credit-risk-model/src/mlruns/0/860e4ca46d3d4b839132a55f90436ae2/artifacts
+end_time: 1751381523717
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 860e4ca46d3d4b839132a55f90436ae2
+run_name: gradient_boosting
+run_uuid: 860e4ca46d3d4b839132a55f90436ae2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1751380596427
+status: 3
+tags: []
+user_id: Hp
